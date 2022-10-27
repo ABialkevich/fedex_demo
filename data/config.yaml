@@ -1,0 +1,7 @@
+#chrome/firefox
+url: https://www.fedex.com/en-gb/home.html
+browser: chrome
+
+#ENG/ESP
+language: ENG
+localrun: true

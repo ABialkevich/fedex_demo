@@ -1,0 +1,50 @@
+version: '3.7'
+
+services:
+  selenium:
+    image: selenium/standalone-firefox:4.5.3-20221024
+    container_name: 'selenium'
+    tty: true
+    ports:
+      - "4444:4444"
+      - "7900:7900"
+    shm_size: "2g"
+    restart: always
+    healthcheck:
+      test: curl --fail http://selenium:4444 || exit 1
+      interval: 2s
+      retries: 2
+      start_period: 5s
+      timeout: 5s
+
+  allure:
+    image: "frankescobar/allure-docker-service"
+    environment:
+      CHECK_RESULTS_EVERY_SECONDS: NONE
+      KEEP_HISTORY: 1
+      KEEP_HISTORY_LATEST: 25
+    ports:
+      - "5050:5050"
+    volumes:
+      - ${PWD}/projects:/app/projects
+
+  allure-ui:
+    image: "frankescobar/allure-docker-service-ui"
+    environment:
+      ALLURE_DOCKER_PUBLIC_API_URL: "http://localhost:5050"
+      ALLURE_DOCKER_PUBLIC_API_URL_PREFIX: ""
+    ports:
+      - "5252:5252"
+
+  app:
+    build:
+      context: .
+    container_name: 'app'
+    tty: true
+    volumes:
+      - ./src:/src/src
+    depends_on:
+      - selenium
+      - allure
+      - allure-ui
+
