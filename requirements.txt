@@ -12,5 +12,5 @@ pydantic~=1.10.2
 smart_assertions
 tenacity~=8.1.0
 pytest-parallel
-# beautifulsoup4
+beautifulsoup4
 requests~=2.28.1
