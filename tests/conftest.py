@@ -27,8 +27,10 @@ def pytest_addoption(parser):
 @fixture()
 def create_driver(request):
     driver_caught = False
-    while driver_caught:
+    tries = 3
+    while driver_caught and tries > 0:
         try:
+            tries -= 1
             os.environ['no_proxy'] = '*'
             config = Config()
             # the following conditions are needed to support local tests run
