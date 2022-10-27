@@ -4,7 +4,6 @@ from distutils.util import strtobool
 
 from _pytest.fixtures import fixture
 from selenium import webdriver
-from selenium.webdriver import DesiredCapabilities
 from selenium.webdriver.chrome.service import Service as ServiceChrome
 from selenium.webdriver.common.options import ArgOptions
 from selenium.webdriver.firefox.service import Service as ServiceFirefox
@@ -16,6 +15,7 @@ from models.config import Config
 from utils.yaml_parser import YamlParser
 
 
+# only for run in docker container
 def pytest_addoption(parser):
     parser.addoption("--localrun", action="store", default='false', help='Base URL for the API tests')
     parser.addoption("--browser", action="store", default="firefox")
@@ -41,25 +41,29 @@ def create_driver(request):
                     setattr(config, key, getattr(request.config.option, key))
 
             options = ArgOptions()
+
             if config.headless:
                 options.add_argument('--headless')
-                options.add_argument('--no-sandbox')
-                options.add_argument('--disable-gpu')
-                options.add_argument('--window-size=1920,1080')
+
+            options.add_argument('--no-sandbox')
+            options.add_argument('--disable-gpu')
+            options.add_argument('--window-size=1920,1080')
+
+            if config.browser == Browser.CHROME.value:
+                browser_options = webdriver.ChromeOptions()
+            else:
+                browser_options = webdriver.FirefoxOptions()
+            browser_options.arguments.extend(options.arguments)
 
             if strtobool(config.localrun) == 1:
                 if config.browser == Browser.CHROME.value:
-                    chrome_options = webdriver.ChromeOptions()
-                    chrome_options.arguments.extend(options.arguments)
                     driver = webdriver.Chrome(service=ServiceChrome(ChromeDriverManager().install()),
-                                              options=chrome_options)
+                                              options=browser_options)
                 elif config.browser == Browser.FIREFOX.value:
-                    ff_options = webdriver.FirefoxOptions()
-                    ff_options.arguments.extend(options.arguments)
                     driver = webdriver.Firefox(service=ServiceFirefox(GeckoDriverManager().install()),
-                                               options=ff_options)
+                                               options=browser_options)
             else:
-                driver = webdriver.Remote("http://localhost:4444", desired_capabilities=DesiredCapabilities.FIREFOX)
+                driver = webdriver.Remote("http://localhost:4444", options=browser_options)
 
             driver.maximize_window()
             driver.get(config.url)
