@@ -17,7 +17,7 @@ from utils.yaml_parser import YamlParser
 
 
 def pytest_addoption(parser):
-    parser.addoption("--localrun", action="store", default='true', help='Base URL for the API tests')
+    parser.addoption("--localrun", action="store", default='false', help='Base URL for the API tests')
     parser.addoption("--browser", action="store", default="firefox")
     parser.addoption("--url", action="store", default="https://www.fedex.com/en-gb/home.html")
     parser.addoption("--headless", action="store", default='false')
@@ -59,13 +59,13 @@ def create_driver(request):
                     driver = webdriver.Firefox(service=ServiceFirefox(GeckoDriverManager().install()),
                                                options=ff_options)
             else:
-                driver = webdriver.Remote("http://selenium:4444", desired_capabilities=DesiredCapabilities.FIREFOX)
+                driver = webdriver.Remote("http://localhost:4444", desired_capabilities=DesiredCapabilities.FIREFOX)
 
             driver.maximize_window()
             driver.get(config.url)
             driver_retry = False
         except:
-            print("Error initialisation of driver..")
+            print("Error of getting driver..")
             time.sleep(10)
 
     yield driver, config

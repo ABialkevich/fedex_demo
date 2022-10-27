@@ -1,25 +1,6 @@
 version: '3.7'
 
 services:
-  selenium:
-    image: selenium/standalone-firefox:4.5.3-20221024
-    container_name: 'selenium'
-    tty: true
-    ports:
-      - "4444:4444"
-      - "7900:7900"
-    shm_size: "2g"
-    restart: always
-    networks:
-      - app-network
-#    healthcheck:
-#      test: curl --fail http://selenium:4444 || exit 1
-#      interval: 2s
-#      retries: 2
-#      start_period: 10s
-#      timeout: 5s
-
-
 
   allure:
     image: "frankescobar/allure-docker-service"
@@ -54,12 +35,46 @@ services:
     volumes:
       - ./src:/src/src
     depends_on:
-      - selenium
+      - selenium-hub
       - allure
       - allure-ui
     networks:
       - app-network
 
+
+  chrome:
+    image: selenium/node-chrome:4.5.3-20221024
+    shm_size: 2gb
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=2
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+    depends_on:
+      - selenium-hub
+
+  firefox:
+    image: selenium/node-firefox:4.5.3-20221024
+    shm_size: 2gb
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=2
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+    depends_on:
+      - selenium-hub
+
+  selenium-hub:
+    image: selenium/hub:4.5.3-20221024
+    container_name: selenium-hub
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"
+    environment:
+      - GRID_MAX_SESSIONS=4
 
 networks:
   app-network:
