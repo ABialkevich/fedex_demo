@@ -19,6 +19,7 @@ pipeline {
       steps {
         sh 'docker compose up -d --no-color --wait'
         sh 'docker compose ps'
+        sh 'docker exec -t app sh hub_healthcheck.sh'
       }
     }
     stage('Register project in Allure') {
