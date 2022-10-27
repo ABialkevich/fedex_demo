@@ -23,6 +23,7 @@ pipeline {
     }
     stage('Register project in Allure') {
       steps {
+        sleep(5)
         sh 'docker exec -t app python3 allure_main.py reg_project fedex-demo'
       }
     }
