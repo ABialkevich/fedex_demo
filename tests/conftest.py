@@ -26,9 +26,9 @@ def pytest_addoption(parser):
 
 @fixture()
 def create_driver(request):
-    driver_caught = False
+    driver_retry = True
     tries = 3
-    while driver_caught and tries > 0:
+    while driver_retry and tries > 0:
         try:
             tries -= 1
             os.environ['no_proxy'] = '*'
@@ -63,7 +63,7 @@ def create_driver(request):
 
             driver.maximize_window()
             driver.get(config.url)
-            driver_caught = True
+            driver_retry = False
         except:
             print("Error initialisation of driver..")
             time.sleep(10)
