@@ -17,7 +17,7 @@ from utils.yaml_parser import YamlParser
 
 # only for run in docker container
 def pytest_addoption(parser):
-    parser.addoption("--localrun", action="store", default='false', help='Base URL for the API tests')
+    parser.addoption("--localrun", action="store", default='true', help='Base URL for the API tests')
     parser.addoption("--browser", action="store", default="firefox")
     parser.addoption("--url", action="store", default="https://www.fedex.com/en-gb/home.html")
     parser.addoption("--headless", action="store", default='false')
