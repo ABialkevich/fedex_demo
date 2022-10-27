@@ -36,6 +36,7 @@ pipeline {
         sh 'docker exec -t app python3 allure_main.py gen_results fedex-demo'
       }
     }
+  }
   post {
     always {
       sh 'docker compose down --remove-orphans -v'
