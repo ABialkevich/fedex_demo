@@ -42,17 +42,17 @@ services:
       - app-network
 
 
-#  chrome:
-#    image: selenium/node-chrome:4.5.3-20221024
-#    shm_size: 2gb
-#    environment:
-#      - SE_EVENT_BUS_HOST=selenium-hub
-#      - SE_EVENT_BUS_PUBLISH_PORT=4442
-#      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
-#      - SE_NODE_MAX_SESSIONS=2
-#      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
-#    depends_on:
-#      - selenium-hub
+  #  chrome:
+  #    image: selenium/node-chrome:4.5.3-20221024
+  #    shm_size: 2gb
+  #    environment:
+  #      - SE_EVENT_BUS_HOST=selenium-hub
+  #      - SE_EVENT_BUS_PUBLISH_PORT=4442
+  #      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+  #      - SE_NODE_MAX_SESSIONS=2
+  #      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+  #    depends_on:
+  #      - selenium-hub
 
   firefox:
     image: selenium/node-firefox:4.5.3-20221024
@@ -75,6 +75,11 @@ services:
       - "4444:4444"
     environment:
       - GRID_MAX_SESSIONS=4
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "http://localhost:4444/grid/api/proxy" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
 
 networks:
   app-network:
