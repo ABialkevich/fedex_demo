@@ -1,4 +1,5 @@
 import os
+import time
 from distutils.util import strtobool
 
 from _pytest.fixtures import fixture
@@ -25,36 +26,45 @@ def pytest_addoption(parser):
 
 @fixture()
 def create_driver(request):
-    os.environ['no_proxy'] = '*'
-    config = Config()
-    # the following conditions are needed to support local tests run
-    if strtobool(request.config.option.localrun) == 1:
-        config = Config().parse_obj(YamlParser("config.yaml").read())
-    else:
-        for key in Config().dict():
-            setattr(config, key, getattr(request.config.option, key))
+    driver_caught = False
+    while driver_caught:
+        try:
+            os.environ['no_proxy'] = '*'
+            config = Config()
+            # the following conditions are needed to support local tests run
+            if strtobool(request.config.option.localrun) == 1:
+                config = Config().parse_obj(YamlParser("config.yaml").read())
+            else:
+                for key in Config().dict():
+                    setattr(config, key, getattr(request.config.option, key))
 
-    options = ArgOptions()
-    if config.headless:
-        options.add_argument('--headless')
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-gpu')
-        options.add_argument('--window-size=1920,1080')
+            options = ArgOptions()
+            if config.headless:
+                options.add_argument('--headless')
+                options.add_argument('--no-sandbox')
+                options.add_argument('--disable-gpu')
+                options.add_argument('--window-size=1920,1080')
 
-    if strtobool(config.localrun) == 1:
-        if config.browser == Browser.CHROME.value:
-            chrome_options = webdriver.ChromeOptions()
-            chrome_options.arguments.extend(options.arguments)
-            driver = webdriver.Chrome(service=ServiceChrome(ChromeDriverManager().install()), options=chrome_options)
-        elif config.browser == Browser.FIREFOX.value:
-            ff_options = webdriver.FirefoxOptions()
-            ff_options.arguments.extend(options.arguments)
-            driver = webdriver.Firefox(service=ServiceFirefox(GeckoDriverManager().install()), options=ff_options)
-    else:
-        driver = webdriver.Remote("http://selenium:4444", desired_capabilities=DesiredCapabilities.FIREFOX)
+            if strtobool(config.localrun) == 1:
+                if config.browser == Browser.CHROME.value:
+                    chrome_options = webdriver.ChromeOptions()
+                    chrome_options.arguments.extend(options.arguments)
+                    driver = webdriver.Chrome(service=ServiceChrome(ChromeDriverManager().install()),
+                                              options=chrome_options)
+                elif config.browser == Browser.FIREFOX.value:
+                    ff_options = webdriver.FirefoxOptions()
+                    ff_options.arguments.extend(options.arguments)
+                    driver = webdriver.Firefox(service=ServiceFirefox(GeckoDriverManager().install()),
+                                               options=ff_options)
+            else:
+                driver = webdriver.Remote("http://selenium:4444", desired_capabilities=DesiredCapabilities.FIREFOX)
 
-    driver.maximize_window()
-    driver.get(config.url)
+            driver.maximize_window()
+            driver.get(config.url)
+            driver_caught = True
+        except:
+            print("Error initialisation of driver..")
+            time.sleep(10)
 
     yield driver, config
 
