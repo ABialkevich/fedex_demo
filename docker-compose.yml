@@ -77,8 +77,8 @@ services:
       - GRID_MAX_SESSIONS=4
     healthcheck:
       test: [ "CMD", "/opt/bin/check-grid.sh --host 0.0.0.0 --port 4444" ]
-      interval: 15s
-      timeout: 30s
+      interval: 20s
+      timeout: 40s
       retries: 5
 
 networks:
