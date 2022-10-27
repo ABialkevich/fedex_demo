@@ -76,10 +76,10 @@ services:
     environment:
       - GRID_MAX_SESSIONS=4
     healthcheck:
-      test: [ "CMD", "wget", "--spider", "http://localhost:4444/grid/api/proxy" ]
+      test: [ "CMD", "/opt/bin/check-grid.sh --host 0.0.0.0 --port 4444" ]
       interval: 15s
-      timeout: 5s
-      retries: 3
+      timeout: 30s
+      retries: 5
 
 networks:
   app-network:
