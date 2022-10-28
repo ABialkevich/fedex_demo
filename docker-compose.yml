@@ -65,6 +65,8 @@ services:
       - SE_NODE_OVERRIDE_MAX_SESSIONS=true
     depends_on:
       - selenium-hub
+    networks:
+      - app-network
 
   selenium-hub:
     image: selenium/hub:4.5.3-20221024
@@ -75,7 +77,8 @@ services:
       - "4444:4444"
     environment:
       - GRID_MAX_SESSIONS=4
-
+    networks:
+      - app-network
 
 networks:
   app-network:
