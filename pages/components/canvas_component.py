@@ -21,7 +21,7 @@ class CanvasComponent(BasePage):
         times = 3
         while self._is_elem_displayed(self.TRACK_BTN, timeout=5) and times > 0:
             self._click(self.TRACK_BTN)
-            time.sleep(3)
+            time.sleep(5)
             times -= 1
 
     def click_assistant_icon(self):

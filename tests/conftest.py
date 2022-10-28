@@ -63,7 +63,6 @@ def create_driver(request):
                     driver = webdriver.Firefox(service=ServiceFirefox(GeckoDriverManager().install()),
                                                options=browser_options)
             else:
-                print("starting remote driver...")
                 driver = webdriver.Remote("http://selenium-hub:4444", options=browser_options)
 
             driver.maximize_window()
