@@ -27,7 +27,7 @@ def pytest_addoption(parser):
 @fixture()
 def create_driver(request):
     driver_retry = True
-    tries = 3
+    tries = 2
     while driver_retry and tries > 0:
         try:
             tries -= 1
