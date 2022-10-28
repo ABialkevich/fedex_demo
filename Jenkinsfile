@@ -29,7 +29,7 @@ pipeline {
     }
     stage('Run tests against the container') {
       steps {
-        sh 'docker exec -t app pytest --alluredir=allure-results --localrun false tests/test_assitant_chat.py'
+        sh 'docker exec -t app pytest --alluredir=allure-results --localrun false tests'
       }
     }
     stage('Copyying Allure results to host') {
