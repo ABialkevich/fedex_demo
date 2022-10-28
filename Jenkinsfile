@@ -29,7 +29,7 @@ pipeline {
     }
     stage('Run tests against the container') {
       steps {
-        sh 'docker exec -t app pytest --localrun false --workers 2 tests'
+        sh 'docker exec -t app pytest --localrun false --show-capture=no --workers 2 tests'
       }
     }
 //     stage('Send Results and Generate Allure Report') {
