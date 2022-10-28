@@ -34,7 +34,9 @@ pipeline {
     }
     stage('Generate Allure Report') {
       steps {
+        sh 'pwd'
         sh 'ls -la'
+        sh 'docker cp app:/allure-results /allure-results'
         allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
         // sh 'docker exec -t app python3 allure_main.py gen_results fedex-demo' - needed for docker as service
       }
