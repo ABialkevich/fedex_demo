@@ -29,14 +29,17 @@ pipeline {
     }
     stage('Run tests against the container') {
       steps {
-        sh 'docker exec -t app pytest --localrun false --workers 2 tests'
+        sh 'docker exec -t app pytest --localrun false --workers 2 tests/test_assitant_chat.py'
       }
     }
-//     stage('Send Results and Generate Allure Report') {
-//       steps {
+    stage('Publish Allure Report') {
+      steps {
+        steps {
+            allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
+        }
 //         sh 'docker exec -t app python3 allure_main.py gen_results fedex-demo'
-//       }
-//     }
+      }
+    }
   }
   post {
     always {
