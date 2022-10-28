@@ -32,7 +32,7 @@ pipeline {
         sh 'docker exec -t app pytest --alluredir=allure-results --localrun false tests'
       }
     }
-    stage('Copyying Allure results to host') {
+    stage('Copying Allure results to host') {
       steps {
         // verify that you have permissions to copy files from container to host
         sh 'docker cp app:/src/allure-results .'
