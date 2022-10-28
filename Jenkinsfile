@@ -34,6 +34,7 @@ pipeline {
     }
     stage('Copyying Allure results to host') {
       steps {
+        // verify that you have permissions to copy files from container to host
         sh 'docker cp app:/src/allure-results .'
       }
     }
@@ -44,10 +45,10 @@ pipeline {
       }
     }
   }
-//   post {
-//     always {
-//       sh 'docker compose down --remove-orphans -v'
-//       sh 'docker compose ps'
-//     }
-//   }
+  post {
+    always {
+      sh 'docker compose down --remove-orphans -v'
+      sh 'docker compose ps'
+    }
+  }
 }
