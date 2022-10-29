@@ -3,6 +3,7 @@ pipeline {
   stages {
     stage("verify tooling") {
       steps {
+        git branch: 'main', url: 'https://github.com/ABialkevich/fedex_demo.git/'
         sh '''
           docker version
           docker compose version
@@ -17,7 +18,7 @@ pipeline {
     }
     stage('Start services') {
       steps {
-        sh 'docker compose up -d --no-color --wait'
+        sh 'docker compose -f docker-compose.yml up -d --no-color --wait'
         sh 'docker compose ps'
       }
     }
@@ -28,14 +29,12 @@ pipeline {
     }
     stage('Copying Allure Results') {
       steps {
-          dir("${env.WORKSPACE}@tmp"){
-            sh 'docker cp app:/src/allure-results .'
-          }
+        sh 'docker cp app:/src/allure-results .'
       }
     }
     stage('Generate Allure Report') {
       steps {
-        allure includeProperties: false, jdk: '', results: [[path: 'tmp/allure-results']]
+        allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
       }
     }
   }
@@ -43,9 +42,7 @@ pipeline {
     always {
       sh 'docker compose down --remove-orphans -v'
       sh 'docker compose ps'
-      dir("${env.WORKSPACE}@script@tmp") {
-        sh 'rm -rf allure-results'
-      }
+      cleanWs()
     }
   }
 }
