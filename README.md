@@ -26,6 +26,7 @@
     * Credentials: `your credentials`
     * Branch Specifier (blank for 'any'): `*/main`
     * Script Path: `Jenkinsfile`
+* Go to Jenkins Plugins and install `Allure` plugin
 
 ### Allure Docker Service
 
@@ -35,9 +36,15 @@
     * Swagger: http://localhost:5050 (for local run)
 * Regarding to CI how to get access to services and additional steps will be added later ... 
 
-### e.x Pipeline
+### e.g 
 
-![img.png](img.png)
+#### Pipeline Image
+
+![img_1.png](img_1.png)
+
+#### Allure Report
+
+![img_2.png](img_2.png)
 
 ## Run Tests
 
