@@ -24,7 +24,9 @@ pipeline {
     }
     stage('Run tests against the container') {
       steps {
-        sh 'docker exec -t app pytest --alluredir=allure-results --localrun false tests'
+          catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+            sh 'docker exec -t app pytest --alluredir=allure-results --localrun false tests'
+        }
       }
     }
     stage('Copying Allure Results') {
