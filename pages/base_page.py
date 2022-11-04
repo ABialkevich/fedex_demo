@@ -39,9 +39,5 @@ class BasePage():
             element = WebDriverWait(self._driver, timeout) \
                 .until(expected_conditions.element_to_be_clickable(web_element))
             return element.is_displayed()
-        except TimeoutException:
-            return False
-        except StaleElementReferenceException:
-            return False
-        except NoSuchElementException:
+        except TimeoutException or StaleElementReferenceException | NoSuchElementException:
             return False
