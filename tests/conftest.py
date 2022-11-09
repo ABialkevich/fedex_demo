@@ -15,7 +15,7 @@ from models.config import Config
 from utils.yaml_parser import YamlParser
 
 
-# only for run in docker container
+# needed for passing commandline parameters
 def pytest_addoption(parser):
     parser.addoption("--localrun", action="store", default='true', help='Base URL for the API tests')
     parser.addoption("--browser", action="store", default="firefox")
