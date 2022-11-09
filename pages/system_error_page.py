@@ -5,7 +5,7 @@ from pages.base_page import BasePage
 
 
 class SystemErrorPage(BasePage):
-    NOTIFICATION_ERROR = By.XPATH, '//*[contains(@class,"notification--error")]'
+    NOTIFICATION_ERROR = By.XPATH, '//*[contains(text(),"Unfortunately")]'
     TROUBLE_MSG = By.ID, 'title'
 
     def __init__(self, driver):
