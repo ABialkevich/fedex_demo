@@ -5,3 +5,4 @@ browser: chrome
 #ENG/ESP
 language: ENG
 localrun: true
+headless: False
